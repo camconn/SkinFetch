@@ -1,6 +1,5 @@
 #SkinFetch
 
-##About
 SkinFetch is a Python program for downloading the skins of minecraft users.
 I made SkinFetch just as a small project for fun.
 
@@ -11,7 +10,8 @@ I made SkinFetch just as a small project for fun.
 - An internet connection
 
 All of these packages should be installed on average Ubuntu installation, if for
-some reason you don't have one of these packages, run:
+some reason you don't have one of these packages, run: 
+
 `sudo apt-get install python-qt4 python3 python-urllib3`
 
 ##Running 
@@ -19,10 +19,12 @@ Downloaded skins will be placed into a 'skins' folder in the current working
 directory.
 
 To run SkinFetch with a fancy GUI: `./fetchGUI.py`
+
 To run SkinFetch from command line, `./fetch.py user1 [user2 ... userN]`
 
-Example of typical command-line usage:
-`./fetch.py Notch jeb_ carlmanneh`
+
+An example of typical command-line usage:
+```./fetch.py Notch jeb_ carlmanneh```
 
 ##License
 Copyright (c) 2013 Cameron Conn
