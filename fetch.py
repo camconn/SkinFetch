@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # SkinFetch: Download a player's Minecraft Skin
 # Copyright (c) 2013 Cameron Conn
