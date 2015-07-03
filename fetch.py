@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # SkinFetch: Download a player's Minecraft Skin
-# Copyright (c) 2013 Cameron Conn
+# Copyright (c) 2015 Cameron Conn
 
 # Begin License ===============================================================
 # This file is part of SkinFetch.
@@ -20,49 +20,51 @@
 # along with SkinFetch.  If not, see <http://www.gnu.org/licenses/>.
 # End License =================================================================
 
+
 import sys
-from urllib import request
+import requests
 from os import path, mkdir, getcwd
 
 
-def skin_fetch(username):
+def fetch_skin(username):
     """
     Fetch a player's skin
 
     username -- The username of skin to fetch
     """
 
-    # Check to see if directory 'skins' exists, if not, make it
-    if not path.isdir('skins'):
-        mkdir('skins')
-        print('"skins" folder not found, creating one')
+    # Where do we save the file?
+    file_name = ''.join([username, '.png'])
+    file_path = path.join(getcwd(), 'skins', file_name)  # Save to skins folder
 
-    # Figure out name of file to fetch, and where to save it
-    fileName = ''.join([username, '.png'])
-    filePath = path.join(getcwd(), 'skins', fileName)  # Save to skins folder
+    skin_url = 'http://skins.minecraft.net/MinecraftSkins/{}'.format(file_name)
+    skin = requests.get(skin_url)
 
-    print('\nFetching skin for {}...'.format(username))
-
-    # Actually download the skin
-    skin_url = 'http://s3.amazonaws.com/MinecraftSkins/{}'.format(fileName)
-    skin = request.urlopen(skin_url)
-    with open(filePath, 'wb') as f:
-        f.write(skin.read())
-
-    print('Skin for {0} saved in {1}'.format(username, filePath))
+    if skin.status_code == requests.codes.ok:
+        with open(file_path, 'wb') as f:
+            for chunk in skin.iter_content():
+                f.write(chunk)
+        print('Done!')
+    elif skin.status_code == 404:
+        print('Skin not found.')
+    else:
+        print('An error occurred.')
 
 
 # For running skinfetch from the command line
 if __name__ == "__main__":
     # If no arguments passed, display error and exit
     if len(sys.argv) == 1:
-        print('Error: No arguments passed')
+        print('Error: You must specify a skin to download!')
         sys.exit()
 
-    for name in sys.argv[1:]:
-        username = name.strip()  # Remove whitespace just in case
+    # Check to see if directory 'skins' exists, if not, make it
+    if not path.isdir('skins'):
+        mkdir('skins')
+        print('"skins" folder not found, creating one')
 
-        try:
-            skin_fetch(username)
-        except Exception as e:
-            print('Failed to fetch skin for {0}\n{1}'.format(username, e))
+    for name in sys.argv[1:]:
+        name = name.strip()
+
+        print('Fetching skin for {}...'.format(name), end=' ')
+        fetch_skin(name)
